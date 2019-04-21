@@ -250,11 +250,6 @@
            return false;
 
        }
-
-       
-
-       alert("회원가입이 완료되었습니다.");
-
    }
 
  
@@ -377,15 +372,15 @@
 
            <td><b>관심분야:</b></td>
 
-           <td><input type="checkbox" name="inter" value="컴퓨터">컴퓨터</input>
+           <td><input type="checkbox" name="inter" value="컴퓨터" />컴퓨터
 
-               <input type="checkbox" name="inter" value="인터넷">인터넷</input>
+               <input type="checkbox" name="inter" value="인터넷" />인터넷
 
-               <input type="checkbox" name="inter" value="여행">여행</input>
+               <input type="checkbox" name="inter" value="여행" />여행
 
-               <input type="checkbox" name="inter" value="영화감상">영화감상</input>
+               <input type="checkbox" name="inter" value="영화감상" />영화감상
 
-               <input type="checkbox" name="inter" value="음악감상">음악감상</input>
+               <input type="checkbox" name="inter" value="음악감상" />음악감상
 
            </td>
 

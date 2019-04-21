@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
-    pageEncoding="EUC-KR"%>
-      <%@ page import="java.sql.*"%>
-<%@ page import="javax.sql.*"%>
-<%@ page import="javax.naming.*"%>
+    pageEncoding="EUC-KR"%>    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -10,25 +10,18 @@
 <title>Insert title here</title>
 </head>
 <body>
-<% 
-String sql = "select * from member where id=?";
-Connection conn= null;
-ResultSet rs   = null;
-PreparedStatement pstmt =null;
-try { 
-	Context init = new InitialContext();
-    DataSource ds = (DataSource) init.lookup("java:comp/env/jdbc/OracleDB");
-    conn = ds.getConnection();
-    pstmt= conn.prepareStatement(sql);
-    pstmt.setString(1, request.getParameter("id"));
-    rs = pstmt.executeQuery();
-    rs.next();
-    
-}catch (SQLException e) { // 예외처리
-    out.println("err:"+e.toString());
-}
-%>
-
+<c:catch var="e">
+<sql:query var="rs" dataSource="jdbc/OracleDB">
+		select * from member where id=?
+		<sql:param value="${param.id}" />
+</sql:query>
+</c:catch>
+<c:if test="${e != null}">
+	err: ${e.message}
+</c:if>
+<c:forEach var="row" items="${rs.rows}">
+	<c:set var="data" value="${row}" />
+</c:forEach>
 
 <table width="700" height="400" border="2"  align="center" cellspacing="0">
 
@@ -42,7 +35,7 @@ try {
 
            <td><b>아이디:</b></td>
 
-           <td><%=rs.getString("id") %></td>
+           <td>${data.id}</td>
 
        </tr>
 
@@ -50,7 +43,7 @@ try {
 
            <td><b>비번:</b></td>
 
-           <td><%=rs.getString("pw") %></td>
+           <td>${data.pw}</td>
 
        </tr>
 
@@ -58,7 +51,7 @@ try {
 
            <td><b>메일주소:</b></td>
 
-           <td><%=rs.getString("email") %></td>
+           <td>${data.email}</td>
 
        </tr>
 
@@ -66,7 +59,7 @@ try {
 
            <td><b>이름:</b></td>
 
-           <td><%=rs.getString("name") %></td>
+           <td>${data.name}</td>
 
        </tr>
 
@@ -80,7 +73,7 @@ try {
 
            <td><b>주민등록번호:</td>
 
-           <td><%=rs.getString("num1") %> </td>
+           <td>${data.num1}</td>
 
        </tr>
 
@@ -89,10 +82,9 @@ try {
            <td><b>생일:</b></td>
 
            <td>
-	<%=rs.getString("years") %>
-	<%=rs.getString("month") %>
-	<%=rs.getString("day") %>
-
+           		${data.years}년
+           		${data.month}월
+           		${data.day}일
            </td>
 
        </tr>
@@ -102,9 +94,7 @@ try {
            <td><b>관심분야:</b></td>
 
            <td>
-
-             <%=rs.getString("inter") %>
-
+				${data.inter}
            </td>
 
        </tr>
@@ -117,7 +107,7 @@ try {
 
            </td>
 <td>
-           <%=rs.getString("self") %>
+           ${data.self}
 </td>
        </tr>
 

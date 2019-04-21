@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
-    <%@ page import="java.sql.*"%>
-<%@ page import="javax.sql.*"%>
-<%@ page import="javax.naming.*"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sql" uri="http://java.sun.com/jsp/jstl/sql" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -10,27 +10,17 @@
 <title>Insert title here</title>
 </head>
 <body>
-<%
-String sql = "delete member where id=?";
-Connection conn= null;
-ResultSet rs   = null;
-PreparedStatement pstmt =null;
-try { 
-	Context init = new InitialContext();
-    DataSource ds = (DataSource) init.lookup("java:comp/env/jdbc/OracleDB");
-    conn = ds.getConnection();
-    pstmt= conn.prepareStatement(sql);
-    pstmt.setString(1, request.getParameter("id"));
-    rs = pstmt.executeQuery();
-   	rs.next();
-    %>삭제완료되었습니다<% 
-}catch(SQLException e){
-	out.println("err:"+e.toString());
-	
-}finally{
-	   conn.close();
-}
-    %>
-    <a href="Member_list.jsp">돌아가기</a>
+
+<c:catch var="e">
+	<sql:update var="rs" dataSource="jdbc/OracleDB">
+			delete member where id=?
+			<sql:param value="${param.id}" />
+	</sql:update>
+	삭제완료되었습니다
+</c:catch>
+<c:if test="${e != null}">
+	err: ${e.message}
+</c:if>
+<a href="Member_list.jsp">돌아가기</a>
 </body>
 </html>
